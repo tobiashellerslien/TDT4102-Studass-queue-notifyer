@@ -3,8 +3,8 @@ Logg først inn med feide i vinduet som åpnes. Deretter trykk enter i terminale
 
 Den sjekker hvert 5 min, dette kan endres i time.sleep() funksjonen.
 
-Pause programmet med Ctrl+P
-Exit med Ctrl+X
+Pause programmet med Ctrl+P. 
+Exit med Ctrl+X.
 
 Programmet ser etter "hjelp" på siden. Nøkkelord kan endres i SEARCH_TERM variabelen.
 
