@@ -7,6 +7,9 @@ from plyer import notification
 from datetime import datetime
 import keyboard
 
+SEARCH_METHOD = "text"  # can be "class", "id", or "text"
+SEARCH_TERM = "hjelp"  # the term to search for
+
 def setup_browser():
     options = webdriver.ChromeOptions()
     # Suppress unwanted logs
@@ -24,19 +27,7 @@ def login(browser, url):
         print("The program will continue once you're logged in.")
         print("Press Enter after you have logged in...")
         input()
-        
-        # After login, enable headless mode for background operation
-        browser.quit()
-        options = webdriver.ChromeOptions()
-        options.add_argument('--headless')
-        # Add the same log suppression to headless browser
-        options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        options.add_argument('--log-level=3')
-        options.add_argument('--silent')
-        options.add_experimental_option('excludeSwitches', ['enable-automation'])
-        browser = webdriver.Chrome(options=options)
-        browser.get(url)
-        return browser
+        return browser  # Return the existing browser instead of creating a new one
         
     except Exception as e:
         print(f"Error during login: {e}")
@@ -46,8 +37,21 @@ def login(browser, url):
 def check_website(browser):
     try:
         browser.refresh()
-        page_text = browser.page_source.lower()
-        return "studass" not in page_text  # If hjelp is not in text, we're logged in and can check for queue
+        WebDriverWait(browser, 10).until(
+            EC.presence_of_element_located((By.TAG_NAME, "body"))
+        )
+        
+        if SEARCH_METHOD == "class":
+            elements = browser.find_elements(By.CLASS_NAME, SEARCH_TERM)
+        elif SEARCH_METHOD == "id":
+            elements = browser.find_elements(By.ID, SEARCH_TERM)
+        elif SEARCH_METHOD == "text":
+            # Search for text anywhere in the page
+            page_source = browser.page_source.lower()
+            return SEARCH_TERM.lower() in page_source
+        
+        return len(elements) > 0 if SEARCH_METHOD != "text" else False
+        
     except Exception as e:
         print(f"Error checking website: {e}")
         return False
@@ -76,7 +80,14 @@ def main():
     paused = {'value': False}
     running = {'value': True}
     
-    browser = setup_browser()
+    options = webdriver.ChromeOptions()
+    # Add these options to suppress logs but keep the browser visible
+    options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    options.add_argument('--log-level=3')
+    options.add_argument('--silent')
+    options.add_experimental_option('excludeSwitches', ['enable-automation'])
+    browser = webdriver.Chrome(options=options)
+    
     browser = login(browser, url)
     
     print("Queue helper started. Press Ctrl+X to exit, Ctrl+P to pause/resume.")
@@ -93,7 +104,7 @@ def main():
                 send_notification()
                 print("Notification sent!")
         
-        time.sleep(5)
+        time.sleep(300)
 
 if __name__ == "__main__":
     main()
