@@ -8,6 +8,6 @@ Exit med Ctrl+X.
 
 Programmet ser etter "hjelp" på siden. Nøkkelord kan endres i SEARCH_TERM variabelen.
 
-Last ned ferdig ,exe fil fra releases hvis du vil, eller last ned koden og kjør/kompiler den selv hvis du vil (og vil evt endre på ting)
+Last ned ferdig .exe fil fra releases hvis du vil, eller last ned koden og kjør/kompiler den selv hvis du vil (og vil evt endre på ting)
 
 All ære til Github copilot :)
