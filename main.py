@@ -104,7 +104,7 @@ def main():
                 send_notification()
                 print("Notification sent!")
         
-        time.sleep(300)
+        time.sleep(60)
 
 if __name__ == "__main__":
     main()
